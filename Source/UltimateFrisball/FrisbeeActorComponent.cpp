@@ -77,27 +77,19 @@ void UFrisbeeActorComponent::Catch(UFrisbeePlayerActorComponent * newHolder, USc
 	}
 }
 
-#pragma optimize("", off)
-
-void UFrisbeeActorComponent::PlaceOntopOfActor(AActor* actorWhomstShallReceiveTheDisc)
-{
-	check(actorWhomstShallReceiveTheDisc);
-	GetOwner()->AttachToActor(actorWhomstShallReceiveTheDisc, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-
-	PlaceOntop();
-}
-
 void UFrisbeeActorComponent::PlaceOntopOfComponent(USceneComponent* componentWhomstShallReceiveTheDisc)
 {
 	check(componentWhomstShallReceiveTheDisc);
-	GetOwner()->GetRootComponent()->AttachTo(componentWhomstShallReceiveTheDisc, NAME_None, EAttachLocation::KeepRelativeOffset, true);
-
-	PlaceOntop();
-}
-
-void UFrisbeeActorComponent::PlaceOntop()
-{
+	
+	UPrimitiveComponent* component = Cast<UPrimitiveComponent>(GetOwner()->GetComponentByClass(UPrimitiveComponent::StaticClass()));
+	if (component)
+	{
+		component->SetSimulatePhysics(false);
+	}
+	
+	FAttachmentTransformRules rules = FAttachmentTransformRules::KeepRelativeTransform;
+	rules.bWeldSimulatedBodies = false;
+	GetOwner()->GetRootComponent()->AttachToComponent(componentWhomstShallReceiveTheDisc, rules);
+	
 	GetOwner()->SetActorRelativeLocation(FVector(0, 0, m_verticalOffsetOnHold));
 }
-
-#pragma optimize("", on)

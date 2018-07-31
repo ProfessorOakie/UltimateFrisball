@@ -35,9 +35,7 @@ private:
 	bool CheckCatchConditions();
 	void Catch(UFrisbeePlayerActorComponent * newHolder, USceneComponent * holderPrimitiveComponent);
 	
-	void PlaceOntopOfActor(AActor* actorWhomstShallReceiveTheDisc);
 	void PlaceOntopOfComponent(USceneComponent* componentWhomstShallReceiveTheDisc);
-	void PlaceOntop();
 
 private:
 
