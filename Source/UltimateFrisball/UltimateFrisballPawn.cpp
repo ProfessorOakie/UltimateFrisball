@@ -25,6 +25,7 @@
 #include "IXRTrackingSystem.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #endif // HMD_MODULE_INCLUDED
+#include "FrisbeePlayerActorComponent.h"
 
 const FName AUltimateFrisballPawn::LookUpBinding("LookUp");
 const FName AUltimateFrisballPawn::LookRightBinding("LookRight");
@@ -139,6 +140,8 @@ void AUltimateFrisballPawn::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("SwitchCamera", IE_Pressed, this, &AUltimateFrisballPawn::OnToggleCamera);
 
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AUltimateFrisballPawn::OnResetVR); 
+
+	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AUltimateFrisballPawn::OnThrow);
 }
 
 void AUltimateFrisballPawn::MoveForward(float Val)
@@ -243,6 +246,15 @@ void AUltimateFrisballPawn::OnResetVR()
 		GetController()->SetControlRotation(FRotator());
 	}
 #endif // HMD_MODULE_INCLUDED
+}
+
+void AUltimateFrisballPawn::OnThrow()
+{
+	UFrisbeePlayerActorComponent* component = Cast<UFrisbeePlayerActorComponent>(GetComponentByClass(UFrisbeePlayerActorComponent::StaticClass()));
+	if (component)
+	{
+		component->OnThrow();
+	}
 }
 
 void AUltimateFrisballPawn::UpdateHUDStrings()

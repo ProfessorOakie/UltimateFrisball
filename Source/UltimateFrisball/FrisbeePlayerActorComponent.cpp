@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "FrisbeePlayerActorComponent.h"
+#include "FrisbeeActorComponent.h"
 
 
 // Sets default values for this component's properties
@@ -37,25 +38,32 @@ void UFrisbeePlayerActorComponent::TickComponent(float DeltaTime, ELevelTick Tic
 	// ...
 }
 
-void UFrisbeePlayerActorComponent::OnStartHoldFrisbee()
+void UFrisbeePlayerActorComponent::OnStartHoldFrisbee(UFrisbeeActorComponent* heldFrisbee)
 {
 	m_holdingFrisbee = true;
+	m_heldFrisbee = heldFrisbee;
 
 	if (m_pawn)
 	{
 		m_pawn->OnHandbrakePressed();
 	}
-
 }
 
 void UFrisbeePlayerActorComponent::OnStopHoldFrisbee()
 {
 	m_holdingFrisbee = false;
 
-
 	if (m_pawn)
 	{
 		m_pawn->OnHandbrakeReleased();
 	}
+}
+
+void UFrisbeePlayerActorComponent::OnThrow()
+{
+	//TODO actually be able to aim (from param maybe?)
+	FVector throwingDirection = GetOwner()->GetRootComponent()->GetForwardVector();
+	
+	m_heldFrisbee->Throw(throwingDirection, m_throwingPower);
 }
 

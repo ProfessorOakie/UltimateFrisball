@@ -100,6 +100,9 @@ public:
 	/** Handle reset VR device */
 	void OnResetVR();
 
+	//Handle Frisbee being thrown
+	void OnThrow();
+
 	static const FName LookUpBinding;
 	static const FName LookRightBinding;
 

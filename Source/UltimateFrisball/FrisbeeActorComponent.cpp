@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "FrisbeeActorComponent.h"
+#include "FrisbeePlayerActorComponent.h"
 
 // Sets default values for this component's properties
 UFrisbeeActorComponent::UFrisbeeActorComponent()
@@ -14,12 +15,16 @@ UFrisbeeActorComponent::UFrisbeeActorComponent()
 
 void UFrisbeeActorComponent::Throw(FVector direction, float power)
 {
+	ReleaseFromOnTop();
+
 	UPrimitiveComponent* component = Cast<UPrimitiveComponent>(GetOwner()->FindComponentByClass<UPrimitiveComponent>());
 	if (component)
 	{
 		FVector force = direction * power;
 		component->AddImpulse(force);
 	}
+
+	currentHolder->OnStopHoldFrisbee();	
 }
 
 void UFrisbeeActorComponent::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
@@ -73,7 +78,7 @@ void UFrisbeeActorComponent::Catch(UFrisbeePlayerActorComponent * newHolder, USc
 
 		PlaceOntopOfComponent(holderSceneComponent);
 
-		newHolder->OnStartHoldFrisbee();
+		newHolder->OnStartHoldFrisbee(this);
 	}
 }
 
@@ -92,4 +97,15 @@ void UFrisbeeActorComponent::PlaceOntopOfComponent(USceneComponent* componentWho
 	GetOwner()->GetRootComponent()->AttachToComponent(componentWhomstShallReceiveTheDisc, rules);
 	
 	GetOwner()->SetActorRelativeLocation(FVector(0, 0, m_verticalOffsetOnHold));
+}
+
+void UFrisbeeActorComponent::ReleaseFromOnTop()
+{
+	GetOwner()->GetRootComponent()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+
+	UPrimitiveComponent* component = Cast<UPrimitiveComponent>(GetOwner()->GetComponentByClass(UPrimitiveComponent::StaticClass()));
+	if (component)
+	{
+		component->SetSimulatePhysics(true);
+	}
 }

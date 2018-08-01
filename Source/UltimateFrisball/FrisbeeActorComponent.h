@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "FrisbeePlayerActorComponent.h"
 #include "FrisbeeActorComponent.generated.h"
 
+class UFrisbeePlayerActorComponent;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class ULTIMATEFRISBALL_API UFrisbeeActorComponent : public UActorComponent
@@ -17,6 +17,7 @@ public:
 	// Sets default values for this component's properties
 	UFrisbeeActorComponent();
 
+	UFUNCTION(Server)
 	void Throw(FVector direction, float power);
 
 	UFUNCTION()
@@ -36,7 +37,8 @@ private:
 	void Catch(UFrisbeePlayerActorComponent * newHolder, USceneComponent * holderPrimitiveComponent);
 	
 	void PlaceOntopOfComponent(USceneComponent* componentWhomstShallReceiveTheDisc);
-
+	void ReleaseFromOnTop();
+	
 private:
 
 	UFrisbeePlayerActorComponent * currentHolder;
