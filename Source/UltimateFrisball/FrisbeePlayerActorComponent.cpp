@@ -26,7 +26,7 @@ void UFrisbeePlayerActorComponent::BeginPlay()
 	{
 		m_pawn = pawn;
 	}
-	
+
 }
 
 
@@ -63,7 +63,22 @@ void UFrisbeePlayerActorComponent::OnThrow()
 {
 	//TODO actually be able to aim (from param maybe?)
 	FVector throwingDirection = GetOwner()->GetRootComponent()->GetForwardVector();
-	
+
 	m_heldFrisbee->Throw(throwingDirection, m_throwingPower);
+}
+
+const bool UFrisbeePlayerActorComponent::IsHoldingFrisbee()
+{
+	return m_holdingFrisbee;
+}
+
+void UFrisbeePlayerActorComponent::AssignTeam(const int8 team)
+{
+	TeamNumber = team;
+}
+
+const int8 UFrisbeePlayerActorComponent::GetTeam()
+{
+	return TeamNumber;
 }
 

@@ -10,7 +10,11 @@ class AUltimateFrisballGameMode : public AGameModeBase
 
 public:
 	AUltimateFrisballGameMode();
+
+	bool m_CanScore;
+
 };
+
 
 
 

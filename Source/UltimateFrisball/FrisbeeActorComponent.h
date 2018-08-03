@@ -17,7 +17,7 @@ public:
 	// Sets default values for this component's properties
 	UFrisbeeActorComponent();
 
-	UFUNCTION(Server)
+	//UFUNCTION(Server)
 	void Throw(FVector direction, float power);
 
 	UFUNCTION()
