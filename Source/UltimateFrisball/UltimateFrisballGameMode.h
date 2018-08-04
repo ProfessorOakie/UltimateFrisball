@@ -13,6 +13,16 @@ public:
 
 	bool m_CanScore;
 
+	void Score(int8 team);
+
+	uint32 m_team1Score;
+	uint32 m_team2Score;
+	
+private:
+	void ResetOnScore();
+	void ResetPlayerPositions();
+	void ResetGame();
+	void EndGame();
 };
 
 

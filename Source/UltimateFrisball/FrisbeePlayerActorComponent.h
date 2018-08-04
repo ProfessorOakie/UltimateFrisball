@@ -31,9 +31,9 @@ public:
 
 	void OnThrow();
 
-	const bool IsHoldingFrisbee();
+	bool IsHoldingFrisbee() const;
 	void AssignTeam(int8 team);
-	const int8 GetTeam();
+	int8 GetTeam() const;
 
 private:
 

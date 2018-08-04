@@ -67,7 +67,7 @@ void UFrisbeePlayerActorComponent::OnThrow()
 	m_heldFrisbee->Throw(throwingDirection, m_throwingPower);
 }
 
-const bool UFrisbeePlayerActorComponent::IsHoldingFrisbee()
+bool UFrisbeePlayerActorComponent::IsHoldingFrisbee() const
 {
 	return m_holdingFrisbee;
 }
@@ -77,7 +77,7 @@ void UFrisbeePlayerActorComponent::AssignTeam(const int8 team)
 	TeamNumber = team;
 }
 
-const int8 UFrisbeePlayerActorComponent::GetTeam()
+int8 UFrisbeePlayerActorComponent::GetTeam() const
 {
 	return TeamNumber;
 }

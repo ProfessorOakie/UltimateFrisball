@@ -5,7 +5,7 @@
 #include "UltimateFrisballPawn.h"
 #include "FrisbeePlayerActorComponent.h"
 #include "EngineMinimal.h"
-
+#include "UltimateFrisballGameMode.h"
 // Sets default values
 AFrisbeeEndzone::AFrisbeeEndzone()
 {
@@ -36,12 +36,12 @@ void AFrisbeeEndzone::Tick(float DeltaTime)
 			UFrisbeePlayerActorComponent* TempPlayerComponent = TempPawn->FrisbeeActorComponent;
 			if (TempPlayerComponent)
 			{
-				if (TempPlayerComponent->GetTeam() == TeamThatCanScore && TempPlayerComponent->IsHoldingFrisbee())
+				AUltimateFrisballGameMode* gameMode = Cast<AUltimateFrisballGameMode>(GetWorld()->GetAuthGameMode());
+				if (TempPlayerComponent->GetTeam() == TeamThatCanScore && TempPlayerComponent->IsHoldingFrisbee() && gameMode->m_CanScore)
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
+
 				}
 			}
-
 		}
 	}
 
