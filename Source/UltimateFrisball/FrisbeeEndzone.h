@@ -7,7 +7,7 @@
 #include "FrisbeeEndzone.generated.h"
 
 class UBoxComponent;
-
+class USphereComponent;
 UCLASS()
 class ULTIMATEFRISBALL_API AFrisbeeEndzone : public AActor
 {
@@ -23,6 +23,11 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UBoxComponent* EndzoneOverlapComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USphereComponent* EndzoneExplosionComponent;
+
+	void Explode();
 
 public:
 	// Called every frame

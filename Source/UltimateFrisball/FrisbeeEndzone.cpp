@@ -7,6 +7,7 @@
 #include "EngineMinimal.h"
 #include "UltimateFrisballGameMode.h"
 #include "FrisballGameState.h"
+#include "Components/SphereComponent.h"
 // Sets default values
 AFrisbeeEndzone::AFrisbeeEndzone()
 {
@@ -14,6 +15,10 @@ AFrisbeeEndzone::AFrisbeeEndzone()
 	PrimaryActorTick.bCanEverTick = true;
 	EndzoneOverlapComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Overlap Component"));
 	EndzoneOverlapComponent->SetCollisionResponseToAllChannels(ECR_Overlap);
+	RootComponent = EndzoneOverlapComponent;
+	EndzoneExplosionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Explosion Component"));
+	EndzoneExplosionComponent->SetCollisionResponseToAllChannels(ECR_Overlap);
+	EndzoneExplosionComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -21,6 +26,19 @@ void AFrisbeeEndzone::BeginPlay()
 {
 	Super::BeginPlay();
 
+}
+
+void AFrisbeeEndzone::Explode()
+{
+	TArray<UPrimitiveComponent*> OverlappingComponents;
+	EndzoneOverlapComponent->GetOverlappingComponents(OverlappingComponents);
+	for (int32 i = 0; i < OverlappingComponents.Num(); i++)
+	{
+		if (OverlappingComponents[i] && OverlappingComponents[i]->IsSimulatingPhysics())
+		{
+			OverlappingComponents[i]->AddRadialImpulse(GetActorLocation(), EndzoneExplosionComponent->GetUnscaledSphereRadius(), 8000.0f, RIF_Linear, true);
+		}
+	}
 }
 
 // Called every frame
@@ -41,7 +59,7 @@ void AFrisbeeEndzone::Tick(float DeltaTime)
 				if (TempPlayerComponent->GetTeam() == TeamThatCanScore && TempPlayerComponent->IsHoldingFrisbee() && GameState->m_CanScore)
 				{
 					GameState->TeamScore(TeamThatCanScore);
-					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
+					Explode();
 				}
 			}
 		}
