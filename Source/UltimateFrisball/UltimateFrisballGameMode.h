@@ -10,14 +10,7 @@ class AUltimateFrisballGameMode : public AGameModeBase
 
 public:
 	AUltimateFrisballGameMode();
-
-	bool m_CanScore;
-
-	void Score(int8 team);
-
-	uint32 m_team1Score;
-	uint32 m_team2Score;
-	
+	virtual void BeginPlay() override;
 private:
 	void ResetOnScore();
 	void ResetPlayerPositions();

@@ -3,6 +3,7 @@
 #include "UltimateFrisballGameMode.h"
 #include "UltimateFrisballPawn.h"
 #include "UltimateFrisballHud.h"
+#include "FrisballGameState.h"
 
 AUltimateFrisballGameMode::AUltimateFrisballGameMode()
 {
@@ -10,25 +11,8 @@ AUltimateFrisballGameMode::AUltimateFrisballGameMode()
 	HUDClass = AUltimateFrisballHud::StaticClass();
 }
 
-void AUltimateFrisballGameMode::Score(int8 team)
+void AUltimateFrisballGameMode::BeginPlay()
 {
-	if (team == 1)
-	{
-		m_team1Score++;
-	}
-	else if (team == 2)
-	{
-		m_team2Score++;
-	}
-	else
-	{
-		//error here
-	}
-
-	ResetOnScore();
-}
-
-void AUltimateFrisballGameMode::ResetOnScore()
-{
-	//this->Reset();
+	Super::BeginPlay();
+	Cast<AFrisballGameState>(GameState)->m_CanScore = true;
 }
