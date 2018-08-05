@@ -27,6 +27,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #endif // HMD_MODULE_INCLUDED
 #include "FrisbeePlayerActorComponent.h"
+#include "SimpleNetworkTransformComponent.h"
 
 const FName AUltimateFrisballPawn::LookUpBinding("LookUp");
 const FName AUltimateFrisballPawn::LookRightBinding("LookRight");
@@ -124,6 +125,8 @@ AUltimateFrisballPawn::AUltimateFrisballPawn()
 	bInReverseGear = false;
 
 	FrisbeeActorComponent = CreateDefaultSubobject<UFrisbeePlayerActorComponent>(TEXT("FrisbeePlayerActorComponent"));
+
+	CreateDefaultSubobject<USimpleNetworkTransformComponent>(TEXT("SimpleNetworkTransformComponent"));
 }
 
 void AUltimateFrisballPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

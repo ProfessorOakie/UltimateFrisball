@@ -6,7 +6,7 @@
 
 // Sets default values for this component's properties
 UFrisbeePlayerActorComponent::UFrisbeePlayerActorComponent()
-	: m_holdingFrisbee(false)
+	: m_heldFrisbee(nullptr)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -40,7 +40,6 @@ void UFrisbeePlayerActorComponent::TickComponent(float DeltaTime, ELevelTick Tic
 
 void UFrisbeePlayerActorComponent::OnStartHoldFrisbee(UFrisbeeActorComponent* heldFrisbee)
 {
-	m_holdingFrisbee = true;
 	m_heldFrisbee = heldFrisbee;
 
 	if (m_pawn)
@@ -51,7 +50,7 @@ void UFrisbeePlayerActorComponent::OnStartHoldFrisbee(UFrisbeeActorComponent* he
 
 void UFrisbeePlayerActorComponent::OnStopHoldFrisbee()
 {
-	m_holdingFrisbee = false;
+	m_heldFrisbee = nullptr;
 
 	if (m_pawn)
 	{
@@ -69,7 +68,7 @@ void UFrisbeePlayerActorComponent::OnThrow()
 
 bool UFrisbeePlayerActorComponent::IsHoldingFrisbee() const
 {
-	return m_holdingFrisbee;
+	return m_heldFrisbee != nullptr;
 }
 
 void UFrisbeePlayerActorComponent::AssignTeam(const int8 team)
