@@ -33,7 +33,6 @@ public:
 
 private: 
 
-	bool m_holdingFrisbee;
 	UFrisbeeActorComponent* m_heldFrisbee;
 
 	AUltimateFrisballPawn* m_pawn;

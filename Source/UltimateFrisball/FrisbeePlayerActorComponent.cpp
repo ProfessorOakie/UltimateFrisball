@@ -6,7 +6,7 @@
 
 // Sets default values for this component's properties
 UFrisbeePlayerActorComponent::UFrisbeePlayerActorComponent()
-	: m_holdingFrisbee(false)
+	: m_heldFrisbee(nullptr)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -40,7 +40,6 @@ void UFrisbeePlayerActorComponent::TickComponent(float DeltaTime, ELevelTick Tic
 
 void UFrisbeePlayerActorComponent::OnStartHoldFrisbee(UFrisbeeActorComponent* heldFrisbee)
 {
-	m_holdingFrisbee = true;
 	m_heldFrisbee = heldFrisbee;
 
 	if (m_pawn)
@@ -51,7 +50,7 @@ void UFrisbeePlayerActorComponent::OnStartHoldFrisbee(UFrisbeeActorComponent* he
 
 void UFrisbeePlayerActorComponent::OnStopHoldFrisbee()
 {
-	m_holdingFrisbee = false;
+	m_heldFrisbee = nullptr;
 
 	if (m_pawn)
 	{
@@ -61,9 +60,12 @@ void UFrisbeePlayerActorComponent::OnStopHoldFrisbee()
 
 void UFrisbeePlayerActorComponent::OnThrow()
 {
-	//TODO actually be able to aim (from param maybe?)
-	FVector throwingDirection = GetOwner()->GetRootComponent()->GetForwardVector();
+	if (m_heldFrisbee)
+	{
+		//TODO actually be able to aim (from param maybe?)
+		FVector throwingDirection = GetOwner()->GetRootComponent()->GetForwardVector();
 	
-	m_heldFrisbee->Throw(throwingDirection, m_throwingPower);
+		m_heldFrisbee->Throw(throwingDirection, m_throwingPower);
+	}
 }
 
