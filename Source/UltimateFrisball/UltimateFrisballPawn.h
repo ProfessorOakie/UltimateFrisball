@@ -10,6 +10,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UTextRenderComponent;
 class UInputComponent;
+class UFrisbeePlayerActorComponent;
 
 UCLASS(config=Game)
 class AUltimateFrisballPawn : public AWheeledVehicle
@@ -67,6 +68,9 @@ public:
 	/** Are we in reverse gear */
 	UPROPERTY(Category = Camera, VisibleDefaultsOnly, BlueprintReadOnly)
 	bool bInReverseGear;
+
+	UPROPERTY(VisibleAnywhere, Category = "Frisbee Components")
+	UFrisbeePlayerActorComponent* FrisbeeActorComponent;
 
 	/** Initial offset of incar camera */
 	FVector InternalCameraOrigin;

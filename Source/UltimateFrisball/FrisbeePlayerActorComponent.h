@@ -9,12 +9,12 @@
 
 class UFrisbeeActorComponent;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class ULTIMATEFRISBALL_API UFrisbeePlayerActorComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UFrisbeePlayerActorComponent();
 
@@ -22,7 +22,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -31,14 +31,21 @@ public:
 
 	void OnThrow();
 
-private: 
+	bool IsHoldingFrisbee() const;
+	void AssignTeam(int8 team);
+	int8 GetTeam() const;
+
+private:
 
 	UFrisbeeActorComponent* m_heldFrisbee;
 
 	AUltimateFrisballPawn* m_pawn;
 
-	UPROPERTY(EditAnywhere, Category=Frisbee)
-	float m_throwingPower;
+	UPROPERTY(EditAnywhere, Category = Frisbee)
+		float m_throwingPower;
 
-	
+	UPROPERTY(EditAnywhere, Category = "Teams")
+		int8 TeamNumber;
+
 };
+

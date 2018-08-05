@@ -15,6 +15,7 @@
 #include "Components/TextRenderComponent.h"
 #include "Materials/Material.h"
 #include "GameFramework/Controller.h"
+#include "FrisbeePlayerActorComponent.h"
 
 #ifndef HMD_MODULE_INCLUDED
 #define HMD_MODULE_INCLUDED 0
@@ -121,6 +122,8 @@ AUltimateFrisballPawn::AUltimateFrisballPawn()
 	GearDisplayColor = FColor(255, 255, 255, 255);
 
 	bInReverseGear = false;
+
+	FrisbeeActorComponent = CreateDefaultSubobject<UFrisbeePlayerActorComponent>(TEXT("FrisbeePlayerActorComponent"));
 }
 
 void AUltimateFrisballPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
