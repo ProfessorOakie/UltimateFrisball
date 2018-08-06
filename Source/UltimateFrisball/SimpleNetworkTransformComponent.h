@@ -27,6 +27,9 @@ public:
 	/** Marks the properties we wish to replicate */
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	void OverrideWorldPos(FVector newWorldPos) { WorldPos = newWorldPos; }
+	void OverrideRotation(FRotator newRotation) { Rotation = newRotation; }
+
 
 protected:
 	/** The WorldPos of the character */

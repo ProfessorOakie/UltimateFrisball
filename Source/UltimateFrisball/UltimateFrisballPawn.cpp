@@ -148,6 +148,13 @@ void AUltimateFrisballPawn::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AUltimateFrisballPawn::OnResetVR); 
 
 	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AUltimateFrisballPawn::OnThrow);
+	PlayerInputComponent->BindAction("ResetCar", IE_Pressed, this, &AUltimateFrisballPawn::OnResetCar);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AUltimateFrisballPawn::OnJump);
+
+	PlayerInputComponent->BindAxis("RotateRight", this, &AUltimateFrisballPawn::RotateRight);
+	PlayerInputComponent->BindAxis("RotateForward", this, &AUltimateFrisballPawn::RotateForward);
+
+
 }
 
 void AUltimateFrisballPawn::MoveForward(float Val)
@@ -263,6 +270,43 @@ void AUltimateFrisballPawn::OnThrow()
 		component->OnStopHoldFrisbee();
 	}
 }
+
+void AUltimateFrisballPawn::OnResetCar()
+{
+	UFrisbeePlayerActorComponent* component = Cast<UFrisbeePlayerActorComponent>(GetComponentByClass(UFrisbeePlayerActorComponent::StaticClass()));
+	if (component)
+	{
+		component->Server_OnResetCar();
+	}
+}
+
+void AUltimateFrisballPawn::OnJump()
+{
+	UFrisbeePlayerActorComponent* component = Cast<UFrisbeePlayerActorComponent>(GetComponentByClass(UFrisbeePlayerActorComponent::StaticClass()));
+	if (component)
+	{
+		component->Server_OnJump();
+	}
+}
+
+void AUltimateFrisballPawn::RotateRight(float Val)
+{
+	UFrisbeePlayerActorComponent* component = Cast<UFrisbeePlayerActorComponent>(GetComponentByClass(UFrisbeePlayerActorComponent::StaticClass()));
+	if (component)
+	{
+		component->Server_RotateRight(Val);
+	}
+}
+
+void AUltimateFrisballPawn::RotateForward(float Val)
+{
+	UFrisbeePlayerActorComponent* component = Cast<UFrisbeePlayerActorComponent>(GetComponentByClass(UFrisbeePlayerActorComponent::StaticClass()));
+	if (component)
+	{
+		component->Server_RotateForward(Val);
+	}
+}
+
 
 void AUltimateFrisballPawn::UpdateHUDStrings()
 {
