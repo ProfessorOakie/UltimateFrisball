@@ -76,7 +76,6 @@ AActor * ANetworkedFrisballGameMode::ChoosePlayerStart_Implementation(AControlle
 		}
 		populated = true;
 	}
-	
 
 	if(Player)
 	{
@@ -93,6 +92,7 @@ AActor * ANetworkedFrisballGameMode::ChoosePlayerStart_Implementation(AControlle
 	return nullptr;
 	
 }
+
 
 
 void ANetworkedFrisballGameMode::DelayStartMatch()
