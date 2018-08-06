@@ -16,7 +16,6 @@
 #include "Materials/Material.h"
 #include "GameFramework/Controller.h"
 #include "FrisbeePlayerActorComponent.h"
-#include "FrisballPlayerState.h"
 
 #ifndef HMD_MODULE_INCLUDED
 #define HMD_MODULE_INCLUDED 0
@@ -28,6 +27,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #endif // HMD_MODULE_INCLUDED
 #include "FrisbeePlayerActorComponent.h"
+#include "SimpleNetworkTransformComponent.h"
 
 const FName AUltimateFrisballPawn::LookUpBinding("LookUp");
 const FName AUltimateFrisballPawn::LookRightBinding("LookRight");
@@ -126,8 +126,7 @@ AUltimateFrisballPawn::AUltimateFrisballPawn()
 
 	FrisbeeActorComponent = CreateDefaultSubobject<UFrisbeePlayerActorComponent>(TEXT("FrisbeePlayerActorComponent"));
 
-	bReplicates = true;
-	bReplicateMovement = true;
+	CreateDefaultSubobject<USimpleNetworkTransformComponent>(TEXT("SimpleNetworkTransformComponent"));
 }
 
 void AUltimateFrisballPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -149,6 +148,13 @@ void AUltimateFrisballPawn::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AUltimateFrisballPawn::OnResetVR); 
 
 	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AUltimateFrisballPawn::OnThrow);
+	PlayerInputComponent->BindAction("ResetCar", IE_Pressed, this, &AUltimateFrisballPawn::OnResetCar);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AUltimateFrisballPawn::OnJump);
+
+	PlayerInputComponent->BindAxis("RotateRight", this, &AUltimateFrisballPawn::RotateRight);
+	PlayerInputComponent->BindAxis("RotateForward", this, &AUltimateFrisballPawn::RotateForward);
+
+
 }
 
 void AUltimateFrisballPawn::MoveForward(float Val)
@@ -230,7 +236,6 @@ void AUltimateFrisballPawn::Tick(float Delta)
 			InternalCamera->RelativeRotation = HeadRotation;
 		}
 	}
-
 }
 
 void AUltimateFrisballPawn::BeginPlay()
@@ -242,10 +247,6 @@ void AUltimateFrisballPawn::BeginPlay()
 	bEnableInCar = UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled();
 #endif // HMD_MODULE_INCLUDED
 	EnableIncarView(bEnableInCar,true);
-
-	
-
-	
 }
 
 void AUltimateFrisballPawn::OnResetVR()
@@ -265,9 +266,47 @@ void AUltimateFrisballPawn::OnThrow()
 	UFrisbeePlayerActorComponent* component = Cast<UFrisbeePlayerActorComponent>(GetComponentByClass(UFrisbeePlayerActorComponent::StaticClass()));
 	if (component)
 	{
-		component->OnThrow();
+		component->Server_OnThrow();
+		component->OnStopHoldFrisbee();
 	}
 }
+
+void AUltimateFrisballPawn::OnResetCar()
+{
+	UFrisbeePlayerActorComponent* component = Cast<UFrisbeePlayerActorComponent>(GetComponentByClass(UFrisbeePlayerActorComponent::StaticClass()));
+	if (component)
+	{
+		component->Server_OnResetCar();
+	}
+}
+
+void AUltimateFrisballPawn::OnJump()
+{
+	UFrisbeePlayerActorComponent* component = Cast<UFrisbeePlayerActorComponent>(GetComponentByClass(UFrisbeePlayerActorComponent::StaticClass()));
+	if (component)
+	{
+		component->Server_OnJump();
+	}
+}
+
+void AUltimateFrisballPawn::RotateRight(float Val)
+{
+	UFrisbeePlayerActorComponent* component = Cast<UFrisbeePlayerActorComponent>(GetComponentByClass(UFrisbeePlayerActorComponent::StaticClass()));
+	if (component)
+	{
+		component->Server_RotateRight(Val);
+	}
+}
+
+void AUltimateFrisballPawn::RotateForward(float Val)
+{
+	UFrisbeePlayerActorComponent* component = Cast<UFrisbeePlayerActorComponent>(GetComponentByClass(UFrisbeePlayerActorComponent::StaticClass()));
+	if (component)
+	{
+		component->Server_RotateForward(Val);
+	}
+}
+
 
 void AUltimateFrisballPawn::UpdateHUDStrings()
 {

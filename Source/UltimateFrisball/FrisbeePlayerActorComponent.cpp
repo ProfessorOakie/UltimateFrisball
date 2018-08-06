@@ -2,11 +2,13 @@
 
 #include "FrisbeePlayerActorComponent.h"
 #include "FrisbeeActorComponent.h"
+#include "UnrealNetwork.h"
+#include "SimpleNetworkTransformComponent.h"
 
 
 // Sets default values for this component's properties
 UFrisbeePlayerActorComponent::UFrisbeePlayerActorComponent()
-	: m_holdingFrisbee(false)
+	: m_heldFrisbee(nullptr)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -40,7 +42,6 @@ void UFrisbeePlayerActorComponent::TickComponent(float DeltaTime, ELevelTick Tic
 
 void UFrisbeePlayerActorComponent::OnStartHoldFrisbee(UFrisbeeActorComponent* heldFrisbee)
 {
-	m_holdingFrisbee = true;
 	m_heldFrisbee = heldFrisbee;
 
 	if (m_pawn)
@@ -51,7 +52,7 @@ void UFrisbeePlayerActorComponent::OnStartHoldFrisbee(UFrisbeeActorComponent* he
 
 void UFrisbeePlayerActorComponent::OnStopHoldFrisbee()
 {
-	m_holdingFrisbee = false;
+	m_heldFrisbee = nullptr;
 
 	if (m_pawn)
 	{
@@ -59,17 +60,97 @@ void UFrisbeePlayerActorComponent::OnStopHoldFrisbee()
 	}
 }
 
-void UFrisbeePlayerActorComponent::OnThrow()
+void UFrisbeePlayerActorComponent::Server_OnThrow_Implementation()
 {
-	//TODO actually be able to aim (from param maybe?)
-	FVector throwingDirection = GetOwner()->GetRootComponent()->GetForwardVector();
+	if (m_heldFrisbee)
+	{
+		//if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("UFrisbeePlayerActorComponent: Server_OnThrow_Implementation")));
 
-	m_heldFrisbee->Throw(throwingDirection, m_throwingPower);
+		//TODO actually be able to aim (from param maybe?)
+		FVector throwingDirection = GetOwner()->GetRootComponent()->GetForwardVector();
+
+		m_heldFrisbee->Throw(throwingDirection, m_throwingPower);
+	}
 }
+
+bool UFrisbeePlayerActorComponent::Server_OnThrow_Validate()
+{
+	return true;
+}
+
+void UFrisbeePlayerActorComponent::Server_OnResetCar_Implementation()
+{
+	//if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("UFrisbeePlayerActorComponent: Server_OnResetCar_Implementation")));
+
+	GetOwner()->GetRootComponent()->SetWorldRotation(FRotator::ZeroRotator, false, nullptr, ETeleportType::ResetPhysics);
+
+	USimpleNetworkTransformComponent* component = GetOwner()->FindComponentByClass<USimpleNetworkTransformComponent>();
+	if (component)
+	{
+		component->OverrideRotation(FRotator::ZeroRotator);
+	}
+}
+
+bool UFrisbeePlayerActorComponent::Server_OnResetCar_Validate()
+{
+	return true;
+}
+
+void UFrisbeePlayerActorComponent::Server_OnJump_Implementation()
+{
+	//if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("UFrisbeePlayerActorComponent: Server_OnJump_Implementation")));
+
+	UPrimitiveComponent* component = Cast<UPrimitiveComponent>(GetOwner()->FindComponentByClass<UPrimitiveComponent>());
+	if (component)
+	{
+		FVector force = FVector::UpVector * m_jumpingPower;
+		component->AddImpulse(force);
+	}
+}
+
+bool UFrisbeePlayerActorComponent::Server_OnJump_Validate()
+{
+	return true;
+}
+
+void UFrisbeePlayerActorComponent::Server_RotateRight_Implementation(float Val)
+{
+	//if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("UFrisbeePlayerActorComponent: Server_RotateRight_Implementation")));
+
+	UPrimitiveComponent* component = Cast<UPrimitiveComponent>(GetOwner()->FindComponentByClass<UPrimitiveComponent>());
+	if (component)
+	{
+		FVector force = FVector::UpVector * m_rotateRightPower * Val;
+		component->AddAngularImpulseInRadians(force);
+	}
+}
+
+bool UFrisbeePlayerActorComponent::Server_RotateRight_Validate(float Val)
+{
+	return true;
+}
+
+void UFrisbeePlayerActorComponent::Server_RotateForward_Implementation(float Val)
+{
+	//if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("UFrisbeePlayerActorComponent: Server_RotateForward_Implementation")));
+
+	UPrimitiveComponent* component = Cast<UPrimitiveComponent>(GetOwner()->FindComponentByClass<UPrimitiveComponent>());
+	if (component)
+	{
+		FVector force = component->GetRightVector() * m_rotateForwardPower * Val;
+		component->AddAngularImpulseInRadians(force);
+	}
+}
+
+bool UFrisbeePlayerActorComponent::Server_RotateForward_Validate(float Val)
+{
+	return true;
+}
+
 
 bool UFrisbeePlayerActorComponent::IsHoldingFrisbee() const
 {
-	return m_holdingFrisbee;
+	return m_heldFrisbee != nullptr;
 }
 
 void UFrisbeePlayerActorComponent::AssignTeam(const int8 team)

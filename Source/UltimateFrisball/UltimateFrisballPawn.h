@@ -107,6 +107,13 @@ public:
 	//Handle Frisbee being thrown
 	void OnThrow();
 
+	void OnResetCar();
+
+	void OnJump();
+
+	void RotateRight(float Val);
+	void RotateForward(float Val);
+
 	static const FName LookUpBinding;
 	static const FName LookRightBinding;
 

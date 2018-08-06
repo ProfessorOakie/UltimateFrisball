@@ -22,21 +22,25 @@ void UFrisbeeActorComponent::Throw(FVector direction, float power)
 	{
 		FVector force = direction * power;
 		component->AddImpulse(force);
+		m_justThrown = true;
 	}
-
-	currentHolder->OnStopHoldFrisbee();	
 }
 
 void UFrisbeeActorComponent::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
 {
 	if ((OtherActor != NULL) && (OtherActor != this->GetOwner()) && (OtherComp != NULL))
 	{
-		if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("I Hit: %s"), *OtherActor->GetName()));
+		//if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("I Hit: %s"), *OtherActor->GetName()));
 		
 		UFrisbeePlayerActorComponent* component = Cast<UFrisbeePlayerActorComponent>(OtherActor->FindComponentByClass<UFrisbeePlayerActorComponent>());
 		if (component)
 		{
 			Catch(component, OtherActor->GetRootComponent());
+		}
+		else if (m_justThrown)
+		{
+			m_justThrown = false;
+			OnTurnover();
 		}
 
 	}
@@ -56,6 +60,8 @@ void UFrisbeeActorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 void UFrisbeeActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	m_justThrown = false;
 
 	UPrimitiveComponent* component = Cast<UPrimitiveComponent>(GetOwner()->GetComponentByClass(UPrimitiveComponent::StaticClass()));
 	if (component)
@@ -108,4 +114,9 @@ void UFrisbeeActorComponent::ReleaseFromOnTop()
 	{
 		component->SetSimulatePhysics(true);
 	}
+}
+
+void UFrisbeeActorComponent::OnTurnover()
+{
+	
 }
