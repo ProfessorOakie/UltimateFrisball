@@ -49,7 +49,7 @@ void USimpleNetworkTransformComponent::GetLifetimeReplicatedProps(TArray<FLifeti
 
 void USimpleNetworkTransformComponent::OnRep_WorldPos()
 {
-	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("SimpleNetworkTransform: Replicated WorldPos")));
+	//if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("SimpleNetworkTransform: Replicated WorldPos")));
 
 	if (movingComponent)
 	{
@@ -59,7 +59,7 @@ void USimpleNetworkTransformComponent::OnRep_WorldPos()
 
 void USimpleNetworkTransformComponent::OnRep_Rotation()
 {
-	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("SimpleNetworkTransform: Replicated Rotation")));
+	//if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("SimpleNetworkTransform: Replicated Rotation")));
 
 	if (movingComponent)
 	{

@@ -259,7 +259,7 @@ void AUltimateFrisballPawn::OnThrow()
 	UFrisbeePlayerActorComponent* component = Cast<UFrisbeePlayerActorComponent>(GetComponentByClass(UFrisbeePlayerActorComponent::StaticClass()));
 	if (component)
 	{
-		component->OnThrow();
+		component->Server_OnThrow();
 	}
 }
 

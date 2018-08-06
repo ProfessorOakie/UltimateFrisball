@@ -29,7 +29,10 @@ public:
 	void OnStartHoldFrisbee(UFrisbeeActorComponent* heldFrisbee);
 	void OnStopHoldFrisbee();
 
-	void OnThrow();
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_OnThrow();
+	void Server_OnThrow_Implementation();
+	bool Server_OnThrow_Validate();
 
 	bool IsHoldingFrisbee() const;
 	void AssignTeam(int8 team);

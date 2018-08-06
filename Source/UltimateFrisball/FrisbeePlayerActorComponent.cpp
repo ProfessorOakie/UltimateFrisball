@@ -2,6 +2,7 @@
 
 #include "FrisbeePlayerActorComponent.h"
 #include "FrisbeeActorComponent.h"
+#include "UnrealNetwork.h"
 
 
 // Sets default values for this component's properties
@@ -58,12 +59,23 @@ void UFrisbeePlayerActorComponent::OnStopHoldFrisbee()
 	}
 }
 
-void UFrisbeePlayerActorComponent::OnThrow()
+void UFrisbeePlayerActorComponent::Server_OnThrow_Implementation()
 {
-	//TODO actually be able to aim (from param maybe?)
-	FVector throwingDirection = GetOwner()->GetRootComponent()->GetForwardVector();
+	if (m_heldFrisbee)
+	{
+		if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("UFrisbeePlayerActorComponent: Server_OnThrow_Implementation")));
 
-	m_heldFrisbee->Throw(throwingDirection, m_throwingPower);
+
+		//TODO actually be able to aim (from param maybe?)
+		FVector throwingDirection = GetOwner()->GetRootComponent()->GetForwardVector();
+
+		m_heldFrisbee->Throw(throwingDirection, m_throwingPower);
+	}
+}
+
+bool UFrisbeePlayerActorComponent::Server_OnThrow_Validate()
+{
+	return true;
 }
 
 bool UFrisbeePlayerActorComponent::IsHoldingFrisbee() const
