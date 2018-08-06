@@ -38,6 +38,8 @@ private:
 	
 	void PlaceOntopOfComponent(USceneComponent* componentWhomstShallReceiveTheDisc);
 	void ReleaseFromOnTop();
+
+	void OnTurnover();
 	
 private:
 
@@ -45,5 +47,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float m_verticalOffsetOnHold;
+
+	bool m_justThrown;
 
 };

@@ -260,6 +260,7 @@ void AUltimateFrisballPawn::OnThrow()
 	if (component)
 	{
 		component->Server_OnThrow();
+		component->OnStopHoldFrisbee();
 	}
 }
 
