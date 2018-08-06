@@ -9,13 +9,7 @@ class AUltimateFrisballGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	AUltimateFrisballGameMode();
-	virtual void BeginPlay() override;
-private:
-	void ResetOnScore();
-	void ResetPlayerPositions();
-	void ResetGame();
-	void EndGame();
+	
 };
 
 

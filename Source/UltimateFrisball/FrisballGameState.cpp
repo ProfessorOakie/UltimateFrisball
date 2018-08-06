@@ -2,6 +2,7 @@
 
 #include "FrisballGameState.h"
 #include "UnrealNetwork.h"
+#include "UltimateFrisballPawn.h"
 
 void AFrisballGameState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
@@ -22,10 +23,10 @@ void AFrisballGameState::TeamScore(const int8 teamThatScored)
 
 	if (teamThatScored == 1)
 	{
-		team1Score++;
+		team1Score++;  
 	}
 	else if (teamThatScored == 2)
-	{
+	{ 
 		team2Score++;
 	}
 
@@ -42,8 +43,20 @@ bool AFrisballGameState::ServerTeamScore_Validate(const int8 teamThatScored)
 
 void AFrisballGameState::ServerTeamScore_Implementation(const int8 teamThatScored)
 {
-	// This function is only called on the server (where Role == ROLE_Authority), called over the network by clients.
-	// We need to call SetSomeBool() to actually change the value of the bool now!
-	// Inside that function, Role == ROLE_Authority, so it won't try to call ServerSetSomeBool() again.
-	ServerTeamScore(teamThatScored);
+	//call the function on the server
+	TeamScore(teamThatScored);
 }
+
+void AFrisballGameState::PopulateTeams()
+{
+	for (int32 i = 0; i < PlayerArray.Num(); i++)
+	{
+		/*AUltimateFrisballPawn* TempFrisballPawn = Cast<AUltimateFrisballPawn>(PlayerArray[i]);
+		if (TempFrisballPawn)
+		{
+		
+		}
+		*/
+	}
+}
+

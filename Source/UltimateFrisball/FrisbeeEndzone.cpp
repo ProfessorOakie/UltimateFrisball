@@ -19,6 +19,8 @@ AFrisbeeEndzone::AFrisbeeEndzone()
 	EndzoneExplosionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Explosion Component"));
 	EndzoneExplosionComponent->SetCollisionResponseToAllChannels(ECR_Overlap);
 	EndzoneExplosionComponent->SetupAttachment(RootComponent);
+
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned
@@ -39,6 +41,22 @@ void AFrisbeeEndzone::Explode()
 			OverlappingComponents[i]->AddRadialImpulse(GetActorLocation(), EndzoneExplosionComponent->GetUnscaledSphereRadius(), 8000.0f, RIF_Linear, true);
 		}
 	}
+
+	if (Role < ROLE_Authority)
+	{
+		Server_Explode();
+	}
+}
+
+void AFrisbeeEndzone::Server_Explode_Implementation()
+{
+	Explode();
+}
+
+bool  AFrisbeeEndzone::Server_Explode_Validate()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
+	return true;
 }
 
 // Called every frame

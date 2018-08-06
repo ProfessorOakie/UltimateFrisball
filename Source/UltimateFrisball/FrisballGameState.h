@@ -9,6 +9,7 @@
 /**
  * 
  */
+class AUltimateFrisballPawn;
 UCLASS()
 class ULTIMATEFRISBALL_API AFrisballGameState : public AGameState
 {
@@ -20,6 +21,8 @@ public:
 	void TeamScore(const int8 teamThatScored);
 	UFUNCTION(reliable, server, WithValidation)
 	void ServerTeamScore(const int8 teamThatScored);
+
+	void PopulateTeams();
 
 	UPROPERTY(Replicated)
 	bool m_CanScore;
@@ -33,6 +36,11 @@ protected:
 
 	UPROPERTY(Replicated, BlueprintReadOnly)
 	float TimeLeft;
+
+	bool m_IsPlaying = true;
+
+	TArray<AUltimateFrisballPawn*> Team1Players;
+	TArray<AUltimateFrisballPawn*> Team2Players;
 
 	
 };

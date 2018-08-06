@@ -16,6 +16,7 @@
 #include "Materials/Material.h"
 #include "GameFramework/Controller.h"
 #include "FrisbeePlayerActorComponent.h"
+#include "FrisballPlayerState.h"
 
 #ifndef HMD_MODULE_INCLUDED
 #define HMD_MODULE_INCLUDED 0
@@ -124,6 +125,9 @@ AUltimateFrisballPawn::AUltimateFrisballPawn()
 	bInReverseGear = false;
 
 	FrisbeeActorComponent = CreateDefaultSubobject<UFrisbeePlayerActorComponent>(TEXT("FrisbeePlayerActorComponent"));
+
+	bReplicates = true;
+	bReplicateMovement = true;
 }
 
 void AUltimateFrisballPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -226,6 +230,7 @@ void AUltimateFrisballPawn::Tick(float Delta)
 			InternalCamera->RelativeRotation = HeadRotation;
 		}
 	}
+
 }
 
 void AUltimateFrisballPawn::BeginPlay()
@@ -237,6 +242,10 @@ void AUltimateFrisballPawn::BeginPlay()
 	bEnableInCar = UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled();
 #endif // HMD_MODULE_INCLUDED
 	EnableIncarView(bEnableInCar,true);
+
+	
+
+	
 }
 
 void AUltimateFrisballPawn::OnResetVR()

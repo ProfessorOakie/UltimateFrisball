@@ -28,6 +28,8 @@ protected:
 	USphereComponent* EndzoneExplosionComponent;
 
 	void Explode();
+	UFUNCTION(reliable, server, WithValidation)
+	void Server_Explode();
 
 public:
 	// Called every frame
