@@ -6,9 +6,8 @@
 #include "GameFramework/PlayerState.h"
 #include "FrisballPlayerState.generated.h"
 
-/**
- * 
- */
+class AFrisballKickoffLocations;
+class AUltimateFrisballPawn;
 UCLASS()
 class ULTIMATEFRISBALL_API AFrisballPlayerState : public APlayerState
 {
@@ -16,7 +15,7 @@ class ULTIMATEFRISBALL_API AFrisballPlayerState : public APlayerState
 
 public:
 	UPROPERTY(Replicated)
-		bool m_TeamNumber1 = false;
-	
-	
+	bool m_TeamNumber1 = false;
+	UPROPERTY(Replicated)
+	bool m_TeamAssigned = false;
 };

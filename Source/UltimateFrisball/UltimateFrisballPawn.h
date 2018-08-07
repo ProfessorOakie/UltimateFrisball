@@ -11,6 +11,7 @@ class USpringArmComponent;
 class UTextRenderComponent;
 class UInputComponent;
 class UFrisbeePlayerActorComponent;
+class USimpleNetworkTransformComponent;
 
 UCLASS(config=Game)
 class AUltimateFrisballPawn : public AWheeledVehicle
@@ -71,6 +72,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Frisbee Components")
 	UFrisbeePlayerActorComponent* FrisbeeActorComponent;
+	UPROPERTY(VisibleAnywhere)
+		USimpleNetworkTransformComponent* NetworkTransformComponent;
+
 
 	/** Initial offset of incar camera */
 	FVector InternalCameraOrigin;
@@ -80,6 +84,7 @@ public:
 
 	// Begin Actor interface
 	virtual void Tick(float Delta) override;
+
 protected:
 	virtual void BeginPlay() override;
 

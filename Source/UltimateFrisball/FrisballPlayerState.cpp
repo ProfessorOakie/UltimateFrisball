@@ -8,5 +8,6 @@ void AFrisballPlayerState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty 
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AFrisballPlayerState, m_TeamNumber1);
+	DOREPLIFETIME(AFrisballPlayerState, m_TeamAssigned);
 }
 

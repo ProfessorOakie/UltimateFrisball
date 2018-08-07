@@ -3,6 +3,12 @@
 #include "FrisballGameState.h"
 #include "UnrealNetwork.h"
 #include "UltimateFrisballPawn.h"
+#include "EngineMinimal.h"
+#include "EngineUtils.h"
+#include "FrisballKickoffLocations.h"
+#include "FrisballPlayerState.h"
+#include "FrisbeePlayerActorComponent.h"
+#include "SimpleNetworkTransformComponent.h"
 
 void AFrisballGameState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
@@ -34,7 +40,75 @@ void AFrisballGameState::TeamScore(const int8 teamThatScored)
 	{
 		ServerTeamScore(teamThatScored);
 	}
+
+	ResetToKickoffLocations();
 }
+
+void AFrisballGameState::TestForGameStart()
+{
+	AssignedPlayers++;
+	if (AssignedPlayers >= 2 && AssignedPlayers == PlayerArray.Num())
+	{
+		//assign start/reset locations
+		AssignKickoffLocations();
+		//Move to KickoffLocations
+		ResetToKickoffLocations();
+		//Start the game/kickoff
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Start The Game Boss"));
+		
+	}
+	
+}
+
+void AFrisballGameState::AssignKickoffLocations()
+{
+	TQueue<AFrisballKickoffLocations*> Team1Locations;
+	TQueue<AFrisballKickoffLocations*> Team2Locations;
+	
+	for (TActorIterator<AFrisballKickoffLocations> StartItr(GetWorld()); StartItr; ++StartItr)
+	{
+		AFrisballKickoffLocations* TempLocation = Cast<AFrisballKickoffLocations>(*StartItr);
+		if (TempLocation)
+		{
+			if (TempLocation->m_Team1Location)
+			{
+				Team1Locations.Enqueue(*StartItr);
+			}
+			else
+			{
+				Team2Locations.Enqueue(*StartItr);
+			}
+		}
+	}
+	for (TActorIterator<AUltimateFrisballPawn> StartItr(GetWorld()); StartItr; ++StartItr)
+	{
+		AUltimateFrisballPawn* TempPlayer = Cast<AUltimateFrisballPawn>(*StartItr);
+		if (TempPlayer)
+		{
+			if (TempPlayer->FrisbeeActorComponent->GetTeam()==1)
+			{
+				AFrisballKickoffLocations* TempLoc;
+				Team1Locations.Dequeue(TempLoc);
+				TempPlayer->FrisbeeActorComponent->KickoffLocation = TempLoc->GetActorLocation();
+			}
+			else
+			{
+				AFrisballKickoffLocations* TempLoc;
+				Team2Locations.Dequeue(TempLoc);
+				TempPlayer->FrisbeeActorComponent->KickoffLocation = TempLoc->GetActorLocation();
+			}
+		}
+	}
+}
+
+void AFrisballGameState::ResetToKickoffLocations()
+{
+	for (TActorIterator<AUltimateFrisballPawn> StartItr(GetWorld()); StartItr; ++StartItr)
+	{
+		(*StartItr)->SetActorLocation((*StartItr)->FrisbeeActorComponent->KickoffLocation, false, nullptr, ETeleportType::TeleportPhysics);
+	}
+}
+
 
 bool AFrisballGameState::ServerTeamScore_Validate(const int8 teamThatScored)
 {
@@ -46,17 +120,3 @@ void AFrisballGameState::ServerTeamScore_Implementation(const int8 teamThatScore
 	//call the function on the server
 	TeamScore(teamThatScored);
 }
-
-void AFrisballGameState::PopulateTeams()
-{
-	for (int32 i = 0; i < PlayerArray.Num(); i++)
-	{
-		/*AUltimateFrisballPawn* TempFrisballPawn = Cast<AUltimateFrisballPawn>(PlayerArray[i]);
-		if (TempFrisballPawn)
-		{
-		
-		}
-		*/
-	}
-}
-

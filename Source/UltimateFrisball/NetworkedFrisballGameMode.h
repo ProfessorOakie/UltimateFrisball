@@ -17,7 +17,6 @@ class ULTIMATEFRISBALL_API ANetworkedFrisballGameMode : public AGameMode
 public:
 	ANetworkedFrisballGameMode();
 	virtual void BeginPlay() override;
-	void PostLogin(APlayerController* NewPlayerController) override;
 	AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 	bool ShouldSpawnAtStartSpot(AController * Player) override { return false; };
 

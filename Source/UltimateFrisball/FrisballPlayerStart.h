@@ -17,6 +17,4 @@ class ULTIMATEFRISBALL_API AFrisballPlayerStart : public APlayerStart
 public:
 
 	bool m_Available =true;
-	UPROPERTY(EditAnywhere, Category = "Teams")
-	bool m_IsForTeam1;
 };

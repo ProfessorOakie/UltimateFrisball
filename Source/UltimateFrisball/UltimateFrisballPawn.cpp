@@ -126,7 +126,7 @@ AUltimateFrisballPawn::AUltimateFrisballPawn()
 
 	FrisbeeActorComponent = CreateDefaultSubobject<UFrisbeePlayerActorComponent>(TEXT("FrisbeePlayerActorComponent"));
 
-	CreateDefaultSubobject<USimpleNetworkTransformComponent>(TEXT("SimpleNetworkTransformComponent"));
+	NetworkTransformComponent = CreateDefaultSubobject<USimpleNetworkTransformComponent>(TEXT("SimpleNetworkTransformComponent"));
 }
 
 void AUltimateFrisballPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

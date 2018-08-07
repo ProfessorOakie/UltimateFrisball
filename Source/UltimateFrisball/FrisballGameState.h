@@ -21,11 +21,13 @@ public:
 	void TeamScore(const int8 teamThatScored);
 	UFUNCTION(reliable, server, WithValidation)
 	void ServerTeamScore(const int8 teamThatScored);
-
-	void PopulateTeams();
+	void TestForGameStart();
 
 	UPROPERTY(Replicated)
 	bool m_CanScore;
+
+	TArray<AUltimateFrisballPawn*> ActivePawns;
+
 
 protected:
 	UPROPERTY(Replicated, BlueprintReadOnly)
@@ -39,8 +41,9 @@ protected:
 
 	bool m_IsPlaying = true;
 
-	TArray<AUltimateFrisballPawn*> Team1Players;
-	TArray<AUltimateFrisballPawn*> Team2Players;
 
-	
+	uint8 AssignedPlayers = 0;
+
+	void AssignKickoffLocations();
+	void ResetToKickoffLocations();
 };

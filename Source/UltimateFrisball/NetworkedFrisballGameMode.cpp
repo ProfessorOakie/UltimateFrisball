@@ -33,37 +33,7 @@ void ANetworkedFrisballGameMode::BeginPlay()
 	
 }
 
-
-void ANetworkedFrisballGameMode::PostLogin(APlayerController * NewPlayerController)
-{
-	
-	if (NewPlayerController)
-	{
-		AFrisballPlayerState* PlayerState = Cast<AFrisballPlayerState>(NewPlayerController->PlayerState);
-		if (PlayerState && GameState)
-		{
-			for (APlayerState* IT : GameState->PlayerArray)
-			{
-				AFrisballPlayerState* TempState = Cast<AFrisballPlayerState>(IT);
-				if (TempState)
-				{
-					if(numplayers%2 == 0)
-					{
-						PlayerState->m_TeamNumber1 = true;
-					}
-					else
-					{
-						PlayerState->m_TeamNumber1 = false;
-					}
-					
-				}
-			}
-		}
-		
-	}
-	numplayers++;
-
-}
+\
 
 
 AActor * ANetworkedFrisballGameMode::ChoosePlayerStart_Implementation(AController * Player)
