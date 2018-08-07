@@ -33,7 +33,7 @@ protected:
 
 private:
 	
-	bool CheckCatchConditions();
+	bool CheckCatchConditions(const UFrisbeePlayerActorComponent * attemptingHolder) const;
 	void Catch(UFrisbeePlayerActorComponent * newHolder, USceneComponent * holderPrimitiveComponent);
 	
 	void PlaceOntopOfComponent(USceneComponent* componentWhomstShallReceiveTheDisc);
@@ -49,5 +49,6 @@ private:
 	float m_verticalOffsetOnHold;
 
 	bool m_justThrown;
+	int8 m_lastTeamWithPossession;
 
 };
