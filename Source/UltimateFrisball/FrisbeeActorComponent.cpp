@@ -4,7 +4,9 @@
 #include "FrisbeePlayerActorComponent.h"
 
 // Sets default values for this component's properties
-UFrisbeeActorComponent::UFrisbeeActorComponent()
+UFrisbeeActorComponent::UFrisbeeActorComponent() :
+	m_lastTeamWithPossession(-1)
+	, m_justThrown(false)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -70,17 +72,17 @@ void UFrisbeeActorComponent::BeginPlay()
 	}
 }
 
-bool UFrisbeeActorComponent::CheckCatchConditions()
+bool UFrisbeeActorComponent::CheckCatchConditions(const UFrisbeePlayerActorComponent * attemptingHolder) const
 {
-	//TODO: check on the correct team
-	return true;
+	return attemptingHolder->GetTeam() != m_lastTeamWithPossession;
 }
 
 void UFrisbeeActorComponent::Catch(UFrisbeePlayerActorComponent * newHolder, USceneComponent * holderSceneComponent)
 {
-	if (CheckCatchConditions())
+	if (CheckCatchConditions(newHolder))
 	{
 		currentHolder = newHolder;
+		m_lastTeamWithPossession = newHolder->GetTeam();
 
 		PlaceOntopOfComponent(holderSceneComponent);
 
