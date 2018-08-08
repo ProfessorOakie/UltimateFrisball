@@ -33,7 +33,7 @@ void AFrisballSelectTeam::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-void AFrisballSelectTeam::TriggerEnter(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+void AFrisballSelectTeam::TriggerEnter_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	AUltimateFrisballPawn* TempPawn = Cast<AUltimateFrisballPawn>(OtherActor);
@@ -87,4 +87,9 @@ void AFrisballSelectTeam::TriggerEnter(UPrimitiveComponent* OverlappedComponent,
 	}
 
 	
+}
+bool AFrisballSelectTeam::TriggerEnter_Validate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	return true;
 }

@@ -29,6 +29,7 @@ public:
 	TArray<AUltimateFrisballPawn*> ActivePawns;
 
 
+
 protected:
 	UPROPERTY(Replicated, BlueprintReadOnly)
 	int32 team1Score;
@@ -46,4 +47,6 @@ protected:
 
 	void AssignKickoffLocations();
 	void ResetToKickoffLocations();
+	UFUNCTION(reliable, server, WithValidation)
+	void ServerResetToKickoffLocations();
 };

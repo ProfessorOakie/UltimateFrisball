@@ -9,6 +9,7 @@
 #include "FrisballPlayerState.h"
 #include "FrisbeePlayerActorComponent.h"
 #include "SimpleNetworkTransformComponent.h"
+#include "FrisballSelectTeam.h"
 
 void AFrisballGameState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
@@ -55,9 +56,13 @@ void AFrisballGameState::TestForGameStart()
 		ResetToKickoffLocations();
 		//Start the game/kickoff
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Start The Game Boss"));
-		
+		for(TActorIterator<AFrisballSelectTeam> StartItr(GetWorld()); StartItr; ++StartItr)
+		{
+			Destroy(*StartItr);
+		}
 	}
 	
+
 }
 
 void AFrisballGameState::AssignKickoffLocations()
@@ -88,35 +93,52 @@ void AFrisballGameState::AssignKickoffLocations()
 			if (TempPlayer->FrisbeeActorComponent->GetTeam()==1)
 			{
 				AFrisballKickoffLocations* TempLoc;
-				Team1Locations.Dequeue(TempLoc);
+				Team1Locations.Peek(TempLoc);
 				TempPlayer->FrisbeeActorComponent->KickoffLocation = TempLoc->GetActorLocation();
+				Team1Locations.Pop();
 			}
 			else
 			{
 				AFrisballKickoffLocations* TempLoc;
-				Team2Locations.Dequeue(TempLoc);
+				Team2Locations.Peek(TempLoc);
 				TempPlayer->FrisbeeActorComponent->KickoffLocation = TempLoc->GetActorLocation();
+				Team2Locations.Pop();
 			}
 		}
 	}
 }
 
-void AFrisballGameState::ResetToKickoffLocations()
-{
-	for (TActorIterator<AUltimateFrisballPawn> StartItr(GetWorld()); StartItr; ++StartItr)
-	{
-		(*StartItr)->SetActorLocation((*StartItr)->FrisbeeActorComponent->KickoffLocation, false, nullptr, ETeleportType::TeleportPhysics);
-	}
-}
+
 
 
 bool AFrisballGameState::ServerTeamScore_Validate(const int8 teamThatScored)
 {
 	return true;
 }
+void AFrisballGameState::ResetToKickoffLocations()
+{
+	for (TActorIterator<AUltimateFrisballPawn> StartItr(GetWorld()); StartItr; ++StartItr)
+	{
+		(*StartItr)->SetActorLocation((*StartItr)->FrisbeeActorComponent->KickoffLocation, false, nullptr, ETeleportType::TeleportPhysics);
+	}
+	if (Role < ROLE_Authority)
+	{
+		ServerResetToKickoffLocations();
+	}
+}
 
 void AFrisballGameState::ServerTeamScore_Implementation(const int8 teamThatScored)
 {
 	//call the function on the server
 	TeamScore(teamThatScored);
+}
+
+void AFrisballGameState::ServerResetToKickoffLocations_Implementation()
+{
+	ResetToKickoffLocations();
+}
+
+bool AFrisballGameState::ServerResetToKickoffLocations_Validate()
+{
+	return true;
 }
