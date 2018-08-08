@@ -22,5 +22,10 @@
 			"Name": "RawInput",
 			"Enabled": true
 		}
+	],
+	"TargetPlatforms": [
+		"AllDesktop",
+		"WindowsNoEditor",
+		"MacNoEditor"
 	]
 }
