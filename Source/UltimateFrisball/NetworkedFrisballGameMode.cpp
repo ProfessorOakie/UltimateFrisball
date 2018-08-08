@@ -25,16 +25,12 @@ void ANetworkedFrisballGameMode::BeginPlay()
 {
 	
 	Super::BeginPlay();
-	Cast<AFrisballGameState>(GameState)->m_CanScore = true;
 	FTimerHandle UnusedHandle;
 	GetWorldTimerManager().SetTimer(
 		UnusedHandle, this, &ANetworkedFrisballGameMode::DelayStartMatch, 2.0f, false);
 
 	
 }
-
-\
-
 
 AActor * ANetworkedFrisballGameMode::ChoosePlayerStart_Implementation(AController * Player)
 {

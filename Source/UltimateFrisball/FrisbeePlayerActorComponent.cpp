@@ -4,7 +4,14 @@
 #include "FrisbeeActorComponent.h"
 #include "UnrealNetwork.h"
 #include "SimpleNetworkTransformComponent.h"
+#include "FrisballGameState.h"
+#include "UnrealNetwork.h"
 
+void UFrisbeePlayerActorComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	DOREPLIFETIME(UFrisbeePlayerActorComponent, m_heldFrisbee);
+	DOREPLIFETIME(UFrisbeePlayerActorComponent, TeamNumber);
+}
 
 // Sets default values for this component's properties
 UFrisbeePlayerActorComponent::UFrisbeePlayerActorComponent()
@@ -70,6 +77,16 @@ void UFrisbeePlayerActorComponent::Server_OnThrow_Implementation()
 		FVector throwingDirection = GetOwner()->GetRootComponent()->GetForwardVector();
 
 		m_heldFrisbee->Throw(throwingDirection, m_throwingPower);
+		AFrisballGameState* GameState = Cast<AFrisballGameState>(GetWorld()->GetGameState());
+		OnStopHoldFrisbee();
+		if (GameState)
+		{
+			//kickoff!
+			if (GameState->m_IsKickoff)
+			{
+				GameState->OnKickoff();
+			}
+		}
 	}
 }
 

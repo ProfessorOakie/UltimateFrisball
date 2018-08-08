@@ -64,7 +64,8 @@ public:
 
 private:
 
-	UFrisbeeActorComponent* m_heldFrisbee;
+	UPROPERTY(Replicated)
+	UFrisbeeActorComponent* m_heldFrisbee = nullptr;
 
 	AUltimateFrisballPawn* m_pawn;
 
@@ -80,7 +81,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Frisbee")
 		float m_rotateForwardPower;
 
-	UPROPERTY(EditAnywhere, Category = "Teams")
+	UPROPERTY(EditAnywhere, Category = "Teams", Replicated)
 		int8 TeamNumber;
 
 };

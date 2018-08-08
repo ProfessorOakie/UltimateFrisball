@@ -16,19 +16,19 @@ class ULTIMATEFRISBALL_API AFrisballGameState : public AGameState
 	GENERATED_BODY()
 
 public:
-	void SetTimer(const float CurrentTime);
 
 	void TeamScore(const int8 teamThatScored);
 	UFUNCTION(reliable, server, WithValidation)
 	void ServerTeamScore(const int8 teamThatScored);
+
+	void OnKickoff();
+	UFUNCTION(reliable, server, WithValidation)
+	void ServerOnKickoff();
+
 	void TestForGameStart();
 
 	UPROPERTY(Replicated)
-	bool m_CanScore;
-
-	TArray<AUltimateFrisballPawn*> ActivePawns;
-
-
+	bool m_IsKickoff = true;
 
 protected:
 	UPROPERTY(Replicated, BlueprintReadOnly)
@@ -37,15 +37,13 @@ protected:
 	UPROPERTY(Replicated, BlueprintReadOnly)
 	int32 team2Score;
 
-	UPROPERTY(Replicated, BlueprintReadOnly)
-	float TimeLeft;
-
 	bool m_IsPlaying = true;
 
 
 	uint8 AssignedPlayers = 0;
-
 	void AssignKickoffLocations();
+	UFUNCTION(reliable, server, WithValidation)
+	void ServerAssignKickoffLocations();
 	void ResetToKickoffLocations();
 	UFUNCTION(reliable, server, WithValidation)
 	void ServerResetToKickoffLocations();

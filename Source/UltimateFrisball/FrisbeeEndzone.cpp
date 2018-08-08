@@ -74,10 +74,10 @@ void AFrisbeeEndzone::Tick(float DeltaTime)
 			if (TempPlayerComponent)
 			{
 				AFrisballGameState* GameState = Cast<AFrisballGameState>(GetWorld()->GetGameState());
-				if (TempPlayerComponent->GetTeam() == TeamThatCanScore && TempPlayerComponent->IsHoldingFrisbee() && GameState->m_CanScore)
+				if (TempPlayerComponent->GetTeam() == TeamThatCanScore && TempPlayerComponent->IsHoldingFrisbee() && !GameState->m_IsKickoff)
 				{
 					GameState->TeamScore(TeamThatCanScore);
-					Explode();
+					//Explode();
 				}
 			}
 		}

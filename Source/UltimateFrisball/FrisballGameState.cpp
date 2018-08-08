@@ -18,15 +18,14 @@ void AFrisballGameState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > 
 	// Replicate to everyone
 	DOREPLIFETIME(AFrisballGameState, team1Score);
 	DOREPLIFETIME(AFrisballGameState, team2Score);
-	DOREPLIFETIME(AFrisballGameState, TimeLeft);
-	DOREPLIFETIME(AFrisballGameState, m_CanScore);
+	DOREPLIFETIME(AFrisballGameState, m_IsKickoff);
 
 
 }
 
 void AFrisballGameState::TeamScore(const int8 teamThatScored)
 {
-	m_CanScore = false;
+	m_IsKickoff = true;
 
 	if (teamThatScored == 1)
 	{
@@ -44,6 +43,40 @@ void AFrisballGameState::TeamScore(const int8 teamThatScored)
 
 	ResetToKickoffLocations();
 }
+bool AFrisballGameState::ServerTeamScore_Validate(const int8 teamThatScored)
+{
+	return true;
+}
+
+void AFrisballGameState::ServerTeamScore_Implementation(const int8 teamThatScored)
+{
+	//call the function on the server
+	TeamScore(teamThatScored);
+}
+
+
+void AFrisballGameState::OnKickoff()
+{
+	m_IsKickoff = false;
+	for (TActorIterator<AUltimateFrisballPawn> StartItr(GetWorld()); StartItr; ++StartItr)
+	{
+		(*StartItr)->OnHandbrakeReleased();
+	}
+
+	if (Role < ROLE_Authority)
+	{
+		ServerOnKickoff();
+	}
+}
+
+void AFrisballGameState::ServerOnKickoff_Implementation()
+{
+	OnKickoff();
+}
+bool AFrisballGameState::ServerOnKickoff_Validate()
+{
+	return true;
+}
 
 void AFrisballGameState::TestForGameStart()
 {
@@ -56,10 +89,6 @@ void AFrisballGameState::TestForGameStart()
 		ResetToKickoffLocations();
 		//Start the game/kickoff
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Start The Game Boss"));
-		for(TActorIterator<AFrisballSelectTeam> StartItr(GetWorld()); StartItr; ++StartItr)
-		{
-			Destroy(*StartItr);
-		}
 	}
 	
 
@@ -106,20 +135,31 @@ void AFrisballGameState::AssignKickoffLocations()
 			}
 		}
 	}
+
+	if (Role < ROLE_Authority)
+	{
+		ServerAssignKickoffLocations();
+	}
 }
 
+void AFrisballGameState::ServerAssignKickoffLocations_Implementation()
+{
+	AssignKickoffLocations();
+}
 
-
-
-bool AFrisballGameState::ServerTeamScore_Validate(const int8 teamThatScored)
+bool AFrisballGameState::ServerAssignKickoffLocations_Validate()
 {
 	return true;
 }
+
+
 void AFrisballGameState::ResetToKickoffLocations()
 {
+	m_IsKickoff = false;
 	for (TActorIterator<AUltimateFrisballPawn> StartItr(GetWorld()); StartItr; ++StartItr)
 	{
 		(*StartItr)->SetActorLocation((*StartItr)->FrisbeeActorComponent->KickoffLocation, false, nullptr, ETeleportType::TeleportPhysics);
+		(*StartItr)->OnHandbrakePressed();
 	}
 	if (Role < ROLE_Authority)
 	{
@@ -127,11 +167,7 @@ void AFrisballGameState::ResetToKickoffLocations()
 	}
 }
 
-void AFrisballGameState::ServerTeamScore_Implementation(const int8 teamThatScored)
-{
-	//call the function on the server
-	TeamScore(teamThatScored);
-}
+
 
 void AFrisballGameState::ServerResetToKickoffLocations_Implementation()
 {

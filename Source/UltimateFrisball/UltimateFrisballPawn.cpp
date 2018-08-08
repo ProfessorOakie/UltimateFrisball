@@ -16,6 +16,7 @@
 #include "Materials/Material.h"
 #include "GameFramework/Controller.h"
 #include "FrisbeePlayerActorComponent.h"
+#include "UnrealNetwork.h"
 
 #ifndef HMD_MODULE_INCLUDED
 #define HMD_MODULE_INCLUDED 0
@@ -128,6 +129,7 @@ AUltimateFrisballPawn::AUltimateFrisballPawn()
 
 	NetworkTransformComponent = CreateDefaultSubobject<USimpleNetworkTransformComponent>(TEXT("SimpleNetworkTransformComponent"));
 }
+
 
 void AUltimateFrisballPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
