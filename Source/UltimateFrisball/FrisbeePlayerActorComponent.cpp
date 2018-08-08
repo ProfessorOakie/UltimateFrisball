@@ -6,11 +6,13 @@
 #include "SimpleNetworkTransformComponent.h"
 #include "FrisballGameState.h"
 #include "UnrealNetwork.h"
+#include "EngineMinimal.h"
 
 void UFrisbeePlayerActorComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	DOREPLIFETIME(UFrisbeePlayerActorComponent, m_heldFrisbee);
 	DOREPLIFETIME(UFrisbeePlayerActorComponent, TeamNumber);
+	DOREPLIFETIME(UFrisbeePlayerActorComponent, Team2Material);
 }
 
 // Sets default values for this component's properties
@@ -43,7 +45,10 @@ void UFrisbeePlayerActorComponent::BeginPlay()
 void UFrisbeePlayerActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+	if (GetTeam() == 2)
+	{
+		UpdateMaterial(Team2Material);
+	}
 	// ...
 }
 
@@ -178,5 +183,35 @@ void UFrisbeePlayerActorComponent::AssignTeam(const int8 team)
 int8 UFrisbeePlayerActorComponent::GetTeam() const
 {
 	return TeamNumber;
+}
+
+void UFrisbeePlayerActorComponent::UpdateMaterial(UMaterial * SecondMaterial)
+{
+
+	Team2Material = SecondMaterial;
+	AUltimateFrisballPawn* TempOwner = Cast<AUltimateFrisballPawn>(GetOwner());
+	TempOwner->GetMesh()->SetMaterial(0, Team2Material);
+	TempOwner->GetMesh()->SetMaterial(1, Team2Material);
+	TempOwner->GetMesh()->SetMaterial(2, Team2Material);
+	if (GetOwner()->Role < ROLE_Authority)
+	{
+		ServerUpdateMaterial(SecondMaterial);
+	}
+}
+
+void UFrisbeePlayerActorComponent::ServerUpdateMaterial_Implementation(UMaterial * SecondMaterial)
+{
+	UpdateMaterial(SecondMaterial);
+}
+bool UFrisbeePlayerActorComponent::ServerUpdateMaterial_Validate(UMaterial * SecondMaterial)
+{
+	return true;
+}
+void UFrisbeePlayerActorComponent::OnRep_ColorChange()
+{
+	AUltimateFrisballPawn* TempOwner = Cast<AUltimateFrisballPawn>(GetOwner());
+	TempOwner->GetMesh()->SetMaterial(0, Team2Material);
+	TempOwner->GetMesh()->SetMaterial(1, Team2Material);
+	TempOwner->GetMesh()->SetMaterial(2, Team2Material);
 }
 

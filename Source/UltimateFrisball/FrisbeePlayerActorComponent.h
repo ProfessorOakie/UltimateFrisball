@@ -8,7 +8,7 @@
 #include "FrisbeePlayerActorComponent.generated.h"
 
 class UFrisbeeActorComponent;
-
+class UMaterial;
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class ULTIMATEFRISBALL_API UFrisbeePlayerActorComponent : public UActorComponent
 {
@@ -62,7 +62,13 @@ public:
 	void AssignTeam(int8 team);
 	int8 GetTeam() const;
 
+	
+
+	void UpdateMaterial(UMaterial* SecondMaterial);
+
 private:
+	UPROPERTY(ReplicatedUsing = OnRep_ColorChange)
+		UMaterial* Team2Material;
 
 	UPROPERTY(Replicated)
 	UFrisbeeActorComponent* m_heldFrisbee = nullptr;
@@ -83,6 +89,13 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Teams", Replicated)
 		int8 TeamNumber;
+
+	UFUNCTION(server, unreliable, WithValidation)
+	void ServerUpdateMaterial(UMaterial* SecondMaterial);
+
+
+	UFUNCTION()
+		void OnRep_ColorChange();
 
 };
 

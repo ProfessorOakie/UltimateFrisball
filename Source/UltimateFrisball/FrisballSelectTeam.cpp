@@ -7,6 +7,7 @@
 #include "FrisbeePlayerActorComponent.h"
 #include "EngineMinimal.h"
 #include "FrisballGameState.h"
+#include "UnrealNetwork.h"
 
 // Sets default values
 AFrisballSelectTeam::AFrisballSelectTeam()
@@ -18,6 +19,16 @@ AFrisballSelectTeam::AFrisballSelectTeam()
 	OverlapComponent->SetCollisionResponseToAllChannels(ECR_Overlap);
 	OverlapComponent->OnComponentBeginOverlap.AddDynamic(this, &AFrisballSelectTeam::TriggerEnter);
 	
+}
+
+void AFrisballSelectTeam::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// Replicate to everyone
+	DOREPLIFETIME(AFrisballSelectTeam, SecondMaterial);
+
+
 }
 
 // Called when the game starts or when spawned
@@ -59,9 +70,7 @@ void AFrisballSelectTeam::TriggerEnter(UPrimitiveComponent* OverlappedComponent,
 					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("JoinedTeam2"));
 					state->m_TeamNumber1 = false;
 					TempPawn->FrisbeeActorComponent->AssignTeam(2);
-					TempPawn->GetMesh()->SetMaterial(0, SecondMaterial);
-					TempPawn->GetMesh()->SetMaterial(1, SecondMaterial);
-					TempPawn->GetMesh()->SetMaterial(2, SecondMaterial);
+					TempPawn->FrisbeeActorComponent->UpdateMaterial(SecondMaterial);
 				}
 
 				state->m_TeamAssigned = true;

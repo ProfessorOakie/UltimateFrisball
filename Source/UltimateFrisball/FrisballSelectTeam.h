@@ -33,7 +33,7 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	bool m_JoinTeam1;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Replicated)
 	UMaterial* SecondMaterial;
 
 	uint8 AssignedPlayers = 0;
